@@ -1,6 +1,7 @@
 #!/usr/bin/python 
 # -*- coding:utf-8 -*-
 
+import gtk
 import Tkinter as tk
 import threading
 import wave
@@ -53,12 +54,18 @@ class Notify():
         #self.root.title(u"TweetNotify")
         #self.root.title(strUrl[strUrl.rfind('/')+1:])
         self.root.title(self.str_title_text)
-        self.root.geometry('410x300')
-        self.root.geometry('+880+724')
+        screenwidth,screenheight=self.getMonitorSize()
+        dialogwidth=400
+        dialogheight=240
+        textboxwidth=400
+        textboxheight=40
+        #self.root.geometry('410x300')
+        self.root.geometry("+%d+%d"%(screenwidth-dialogwidth-30,screenheight-dialogheight-105))
+        #self.root.geometry('+880+724')
         #button.pack(anchor='se')
         self.root.attributes("-topmost",True)
 
-        self.container = tk.Frame(self.root,width=400,height=240)
+        self.container = tk.Frame(self.root,width=dialogwidth,height=dialogheight)
         self.container.propagate(0)
         self.canvas = tk.Canvas(self.container)
         self.scrollbar = tk.Scrollbar(self.container, orient="vertical", command=self.canvas.yview)
@@ -75,6 +82,7 @@ class Notify():
         
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         
+        #self.frame2=tk.Frame(self.root,width=textboxwidth,height=textboxheight)
         self.frame2=tk.Frame(self.root,width=400,height=40)
         self.frame2.grid(row=1,column=0,padx=10,pady=5)
         self.frame2.propagate(0)
@@ -135,6 +143,11 @@ class Notify():
             self.ary_obj_text.insert(len(self.ary_obj_text),tk.Text(self.scrollable_frame,width='40',height=set_height))
             self.ary_obj_text[-1].insert('1.0',unicode(self.ary_text[i]))
             self.ary_obj_text[-1].pack()
+
+    def getMonitorSize(self,):
+        w=gtk.Window()
+        s=w.get_screen()
+        return [s.get_monitor_geometry(0).width,s.get_monitor_geometry(0).height]
 
     def wavplay(self,str_aud_file_name=""):
         if str_aud_file_name != "":
